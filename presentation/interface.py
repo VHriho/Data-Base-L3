@@ -1,9 +1,8 @@
 import datetime
 from business_logic.services import WeatherService
-from config import postgres_config
+from data_access.repo import WeatherRepository
 
-def run_interface():
-    service = WeatherService()
+def run_interface(service: WeatherService, db_config: dict):
     print("\n--- Interface for obtaining weather information ---")
 
     while True:
@@ -30,7 +29,7 @@ def run_interface():
             weather_records = service.get_weather_data_by_params(
                 country=country,
                 query_date=query_date,
-                db_config=postgres_config,
+                db_config=db_config,
                 location_name=location_name if location_name else None
             )
 
@@ -40,13 +39,13 @@ def run_interface():
                     print(f"  Location: {record.location_name}, "
                           f"UPD: {record.last_updated.strftime('%Y-%m-%d %H:%M')}, "
                           f"Temperature: {record.temperature_celsius}°C, "
-                          f"Conditions: {record.condition_text}, "
+                          f"Conditions: {record.precipitation_details.condition_text}, "
                           f"Wind: {record.wind_kph} km/h, "
                           f"Feels like: {record.feels_like_celsius}°C, "
                           f"UV-index: {record.uv_index}, "
                           f"Sunrise: {record.sunrise}, "
                           f"Sunset: {record.sunset}, "
-                          f"Should go outside?: {'YES' if record.should_go_outside else 'NO'}")
+                          f"Should go outside?: {'YES' if record.precipitation_details.should_go_outside else 'NO'}")
                 print("-" * 30)
             else:
                 print("Weather information not found for the specified parameters.")

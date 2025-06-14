@@ -22,24 +22,24 @@ class WeatherORM(Base):
     __tablename__ = 'weather_data'
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    country = Column(String(100), nullable=False)
-    location_name = Column(String(255), nullable=False)
+    country = Column(String(50), nullable=False)
+    location_name = Column(String(100), nullable=False)
     last_updated = Column(DateTime, nullable=False)
     temperature_celsius = Column(Float, nullable=False)
-    wind_kph = Column(Float)
-    wind_degree = Column(Integer)
-    wind_direction = Column(String(50))
-    feels_like_celsius = Column(Float)
-    visibility_km = Column(Float)
-    uv_index = Column(Float)
-    sunrise = Column(String(20))
-    sunset = Column(String(20))
-
+    wind_kph = Column(Float, nullable=False)
+    wind_degree = Column(Integer, nullable=False)
+    wind_direction = Column(String(10), nullable=False)
+    feels_like_celsius = Column(Float, nullable=False)
+    visibility_km = Column(Float, nullable=False)
+    uv_index = Column(Float, nullable=False)
+    sunrise = Column(String(10), nullable=False)
+    sunset = Column(String(10), nullable=False)
     precipitation_details_id = Column(Integer, ForeignKey('precipitation_details.id'), nullable=True)
     precipitation_details_rel = relationship('PrecipitationDetailsORM', back_populates='weathers')
 
     @classmethod
     def from_domain_model(cls, domain_obj: WeatherData):
+    
         return cls(
             country=domain_obj.country,
             location_name=domain_obj.location_name,
@@ -53,5 +53,4 @@ class WeatherORM(Base):
             uv_index=domain_obj.uv_index,
             sunrise=domain_obj.sunrise,
             sunset=domain_obj.sunset,
-            precipitation_details_id=None
         )
